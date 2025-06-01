@@ -1,30 +1,30 @@
-'use client';
+"use client";
 
-import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function ThankYouPage() {
-  const searchParams = useSearchParams();
-  const orderId = searchParams.get('orderId');
   const [order, setOrder] = useState(null);
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const orderId = params.get("orderId");
+
     if (!orderId) return;
-  
+
     fetch(`/api/order?id=${orderId}`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch order");
         return res.json();
       })
       .then((data) => {
-        console.log(" Fetched order data:", data);
+        console.log("Fetched order data:", data);
         setOrder(data);
       })
       .catch((err) => {
-        console.error(" Failed to fetch order:", err);
+        console.error("Failed to fetch order:", err);
       });
-  }, [orderId]);
-  
+  }, []);
+
   if (!order) return <p className="text-center p-6">Loading...</p>;
 
   return (
